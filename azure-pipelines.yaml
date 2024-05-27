@@ -96,37 +96,55 @@ stages:
           #--------------------------------------------#
           # Postman - Install Newman
           # ToDo: Update the command and verify the working directory
+          - task: NodeTool@0
+            displayName: Install NodeJS
+            inputs:
+              versionSpec: "16.x"
+          - task: CmdLine@2
+            displayName: Install NPM
+            inputs:
+              script: "sudo apt install npm -y"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
           - task: CmdLine@2
             displayName: Install Newman
             inputs:
               script: "sudo npm install -g newman"
-              workingDirectory: $(System.DefaultWorkingDirectory)
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+
           #     # Postman Data Validation Test Suite
           #     # ToDo: Verify the working directory
           - task: CmdLine@2
             displayName: Run Data Validation Tests
             continueOnError: true
             inputs:
-              script: "newman run TestSuite.Data-Validation.json -e StarterAPIs.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml"
               workingDirectory: "$(System.DefaultWorkingDirectory)/automatedtesting/postman"
+              script: |
+                newman run DataValidationTestSuite.json -e environment.json --reporters cli,junit --reporter-junit-export data-validation-test-report.xml
           #     # Postman Regression Test Suite
           #     # ToDo: Verify the working directory
           - task: CmdLine@2
             displayName: Run Regression Tests
             continueOnError: true
             inputs:
-              script: "newman run TestSuite.Regression.json -e StarterAPIs.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml"
+              script: |
+                newman run RegressionTestSuite.json -e environment.json --reporters cli,junit --reporter-junit-export regresstion-test-report.xml
               workingDirectory: "$(System.DefaultWorkingDirectory)/automatedtesting/postman"
           #     # Postman - Publish Results
           #     # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
+          # - task: PublishTestResults@2
+          #   inputs:
+          #     testResultsFormat: "JUnit"
+          #     testResultsFiles: "**/TEST-*.xml"
+          #     searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'# ToDo
+          #     mergeTestResults: true
+          #     testRunTitle: Postman Test Result # ToDo
           - task: PublishTestResults@2
             inputs:
               testResultsFormat: "JUnit"
-              testResultsFiles: "**/TEST-*.xml"
-              searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'# ToDo
+              testResultsFiles: "**/*report.xml"
+              searchFolder: "$(System.DefaultWorkingDirectory)/automatedtesting/postman"
               mergeTestResults: true
-              testRunTitle: Postman Test Result # ToDo
-
+              testRunTitle: "Run Test Report"
 #     #--------------------------------------------#
 #     # Selenium (UI) Test Suite - Archive the package
 #     # "ArchiveFiles@2" picks up the web package and archives it.

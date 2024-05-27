@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Environment for Postman Validation Test Suite" tests="2" time="1.334">
+  <testsuite name="Get all employees" id="b90deb19-0115-423b-85ad-097824d2f6cf" timestamp="2024-05-27T16:39:29.071Z" tests="1" failures="0" errors="0" time="0.944">
+    <testcase name="Successful response" time="0.944" classname="EnvironmentForPostmanValidationTestSuite"/>
+  </testsuite>
+  <testsuite name="Get all employees" id="114b4c66-db8e-4ac6-afbb-e117715d2a43" timestamp="2024-05-27T16:39:29.071Z" tests="1" failures="0" errors="0" time="0.390">
+    <testcase name="Successful response" time="0.390" classname="EnvironmentForPostmanValidationTestSuite"/>
+  </testsuite>
+</testsuites>
