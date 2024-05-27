@@ -4,105 +4,104 @@ name: Azure Pipelines
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 trigger:
-- master
+  - master
 
-# ToDo: Replace the agent pool name, if you are using Udacity Cloud lab. 
-# Otherwise, comment out the line below. 
+# ToDo: Replace the agent pool name, if you are using Udacity Cloud lab.
+# Otherwise, comment out the line below.
 pool: MyPool
 
 variables:
-  python.version: '3.7.6'
+  python.version: "3.7.6"
   # ToDo: Replace the service connection name as used in the DevOps project settings
-  azureServiceConnectionId: 'myServiceConnection'
+  azureServiceConnectionId: "myServiceConnection"
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'myenv-vm.myVmLinux'
+  environmentName:
+    "myenv-vm.myVmLinux"
     # Web app name
   # webAppName: 'phunghttfinal3-appservice'
   # vmName: 'myVmLinux'
-  
 
 stages:
-#--------------------------------------------#  
-# BUILD STAGE
-#--------------------------------------------#    
-- stage: Build
-  jobs:
-  - job: BuildInfrastructure
-    steps:
-    #--------------------------------------------#  
-    # Use Terraform to create the Infrastructure      
-    # Install Terraform on the pipeline agent 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
-      displayName: 'Terrafom installation'
-      inputs:
-        terraformVersion: '1.2.9'
-    
-    # Run Terraform Init on the pipeline agent 
-    # ToDo: Replace the resource group name, storage account name, and container name below
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-      displayName: 'Terrafom init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        backendServiceArm: '$(azureServiceConnectionId)'
-        backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'tfstate99452388'
-        backendAzureRmContainerName: 'tfstate'
-        backendAzureRmKey: 'test.terraform.tfstate'
+  #--------------------------------------------#
+  # BUILD STAGE
+  #--------------------------------------------#
+  - stage: Build
+    jobs:
+      - job: BuildInfrastructure
+        steps:
+          #--------------------------------------------#
+          # Use Terraform to create the Infrastructure
+          # Install Terraform on the pipeline agent
+          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+            displayName: "Terrafom installation"
+            inputs:
+              terraformVersion: "1.2.9"
 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-      displayName: Terraform validate
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
+          # Run Terraform Init on the pipeline agent
+          # ToDo: Replace the resource group name, storage account name, and container name below
+          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+            displayName: "Terrafom init"
+            inputs:
+              provider: "azurerm"
+              command: "init -reconfigure"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
+              backendServiceArm: "$(azureServiceConnectionId)"
+              backendAzureRmResourceGroupName: "Azuredevops"
+              backendAzureRmStorageAccountName: "tfstate99452388"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "test.terraform.tfstate"
 
-    # OPTIONAL - This step is needed only if your Terraform VM uses an SSH key pair for login and you want your pipeline agent to connect to it. 
-    # Generate an SSH key pair in your local/AZ Cloud shell. Use the public key in the Terraform VM module. 
-    # Install public key and private key file to the pipeline agent, using the task below. 
-    # ToDo: Change the inputs value below
-    # - task: InstallSSHKey@0
-    #   inputs:
-    #     knownHostsEntry: 'KNOWN_HOSTS_STRING' # variable value
-    #     sshPublicKey: 'PUBLIC_KEY'            # variable value
-    #     sshKeySecureFile: 'id_rsa' # Use secure file feature in the pipeline library UI to save the "id_rsa" file, as mentioned here: https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops#add-a-secure-file
-    
-    # - task: DownloadSecureFile@1
-    #  name: udacity_public_key
-    #  displayName: 
-    #  inputs:
-    #   secureFile: 
+          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+            displayName: Terraform validate
+            inputs:
+              provider: "azurerm"
+              command: "validate"
 
-    # # Run Terraform Apply
-    # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-    #   displayName: Terraform apply
-    #   inputs:
-    #     provider: 'azurerm'
-    #     command: 'apply'
-    #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-    #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+          # OPTIONAL - This step is needed only if your Terraform VM uses an SSH key pair for login and you want your pipeline agent to connect to it.
+          # Generate an SSH key pair in your local/AZ Cloud shell. Use the public key in the Terraform VM module.
+          # Install public key and private key file to the pipeline agent, using the task below.
+          # ToDo: Change the inputs value below
+          # - task: InstallSSHKey@0
+          #   inputs:
+          #     knownHostsEntry: 'KNOWN_HOSTS_STRING' # variable value
+          #     sshPublicKey: 'PUBLIC_KEY'            # variable value
+          #     sshKeySecureFile: 'id_rsa' # Use secure file feature in the pipeline library UI to save the "id_rsa" file, as mentioned here: https://learn.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops#add-a-secure-file
 
-    # ToDo: Change the workingDirectory path, as applicable to you
-    # Destroy the resources in Azure by running a separate pipeline. 
-    - task: TerraformTaskV3@3
-      displayName: Terraform destroy
-      inputs:
-        provider: 'azurerm'
-        command: 'destroy'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+          # - task: DownloadSecureFile@1
+          #  name: udacity_public_key
+          #  displayName:
+          #  inputs:
+          #   secureFile:
 
-# #--------------------------------------------#    
-#     # Postman - Install Newman    
+          # # Run Terraform Apply
+          # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+          #   displayName: Terraform apply
+          #   inputs:
+          #     provider: 'azurerm'
+          #     command: 'apply'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+          #     environmentServiceNameAzureRM: '$(azureServiceConnectionId)'
+
+          # ToDo: Change the workingDirectory path, as applicable to you
+          # Destroy the resources in Azure by running a separate pipeline.
+          - task: TerraformTaskV3@3
+            displayName: Terraform destroy
+            inputs:
+              provider: "azurerm"
+              command: "destroy"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
+              environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
+# #--------------------------------------------#
+#     # Postman - Install Newman
 #     # ToDo: Update the command and verify the working directory
 #     - task: CmdLine@2
 #       displayName: Install Newman
 #       inputs:
 #         script: 'sudo npm install -g newman'
 #         workingDirectory: $(System.DefaultWorkingDirectory)
-#     # Postman Data Validation Test Suite    
+#     # Postman Data Validation Test Suite
 #     # ToDo: Verify the working directory
 #     - task: CmdLine@2
 #       displayName: Run Data Validation Tests
@@ -110,7 +109,7 @@ stages:
 #       inputs:
 #         script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'
 #         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-#     # Postman Regression Test Suite    
+#     # Postman Regression Test Suite
 #     # ToDo: Verify the working directory
 #     - task: CmdLine@2
 #       displayName: Run Regression Tests
@@ -118,7 +117,7 @@ stages:
 #       inputs:
 #         script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'
 #         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
-#     # Postman - Publish Results 
+#     # Postman - Publish Results
 #     # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
 #     - task: PublishTestResults@2
 #       inputs:
@@ -129,7 +128,7 @@ stages:
 #         testRunTitle:       # ToDo
 
 #     #--------------------------------------------#
-#     # Selenium (UI) Test Suite - Archive the package  
+#     # Selenium (UI) Test Suite - Archive the package
 #     # "ArchiveFiles@2" picks up the web package and archives it.
 #     - task: ArchiveFiles@2
 #       displayName: 'Archive UI Tests'
@@ -138,18 +137,18 @@ stages:
 #         includeRootFolder: false
 #         archiveType: 'zip'
 #         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip'
-#     # Selenium Test Suite - Publish the package  
-#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above. 
+#     # Selenium Test Suite - Publish the package
+#     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-uitests.zip   # Same as the archiveFile artifact above.
 #       displayName: 'Upload Package'
 #       artifact: drop-uitests
 
-#     #--------------------------------------------#    
+#     #--------------------------------------------#
 #     # FakeRestAPI - Archive
-#     # ToDo: Complete the ArchiveFiles@2 task and publish step 
+#     # ToDo: Complete the ArchiveFiles@2 task and publish step
 #     - task: ArchiveFiles@2
 #       displayName: 'Archive FakeRestAPI'
 #       inputs:
-#         rootFolderOrFile: 
+#         rootFolderOrFile:
 #         includeRootFolder: false
 #         archiveType: 'zip'
 #         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip'
@@ -157,32 +156,32 @@ stages:
 #       displayName: 'Upload Package'
 #       artifact: drop-fakerestapi
 
-#     #--------------------------------------------#  
+#     #--------------------------------------------#
 #     # JMeter (Performance) Test Suite - Archive
-#     # ToDo: Complete the ArchiveFiles@2 task and publish step 
+#     # ToDo: Complete the ArchiveFiles@2 task and publish step
 #     - task: ArchiveFiles@2
 #       displayName: 'Archive PerformanceTestSuite'
 #       inputs:
-#         rootFolderOrFile: 
+#         rootFolderOrFile:
 #         includeRootFolder: false
 #         archiveType: 'zip'
 #         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
-#     # JMeter Test Suite - Publish    
+#     # JMeter Test Suite - Publish
 #     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
 #       displayName: 'Upload Package'
 #       artifact: drop-perftests
 
-# #--------------------------------------------#  
+# #--------------------------------------------#
 # # DEPLOYMENT STAGE
-# #--------------------------------------------#    
+# #--------------------------------------------#
 # - stage: Deploy
 #   jobs:
-#   #--------------------------------------------#  
+#   #--------------------------------------------#
 #   # Deploy FakeRestAPI Web App
 #   # ToDo: Provide <environment name> you created in your DevOps project
 #   - deployment: FakeRestAPI
 #     pool:
-#       vmImage: 'Ubuntu-18.04'      
+#       vmImage: 'Ubuntu-18.04'
 #     environment: <environment name>   # ToDo
 #     strategy:
 #       runOnce:
@@ -194,8 +193,8 @@ stages:
 #               azureSubscription: ''     # ToDo
 #               appName: ''               # ToDo
 #               appType: webApp
-#               package: $(Pipeline.Workspace)/<artifact>/<archiveFile>       # ToDo: Use the published zip artifact. 
-#           #--------------------------------------------#    
+#               package: $(Pipeline.Workspace)/<artifact>/<archiveFile>       # ToDo: Use the published zip artifact.
+#           #--------------------------------------------#
 #           # Run JMeter test suite against the App Service
 #           - task: CmdLine@2
 #             inputs:
@@ -206,10 +205,10 @@ stages:
 #                 ./apache-jmeter-5.2.1/bin/jmeter -n -t PerformanceTestSuite.jmx -j jmeter.log -f
 #                 cat jmeter.log                                                                           # ToDo: Write your commands
 #               workingDirectory: $(Pipeline.Workspace)/<artifact>            # ToDo: Use the artifact name from the task above
-              
-#   #--------------------------------------------#  
+
+#   #--------------------------------------------#
 #   # Selenium | Functional UI Tests
-#   # ToDo: 
+#   # ToDo:
 #   - deployment: VMDeploy
 #     displayName: Selenium Tests
 #     environment:
@@ -222,13 +221,13 @@ stages:
 #           steps:
 #           - download: current
 #             artifact: drop-ui-tests     # ToDo: Change/provide a name
-            
+
 #           - task: Bash@3
 #             inputs:
 #               targetType: 'inline'
-#               script: |           
+#               script: |
 #                 #! /bin/bash
-                
+
 #                 sudo apt-get upgrade -y
 #                 sudo apt-get install python3-pip -y
 #                 sudo apt-get install unzip -y
