@@ -1,5 +1,5 @@
 trigger: 
-- máter
+- master
 
 pool: 
    vmImage: ubuntu-latest
