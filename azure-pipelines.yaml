@@ -30,6 +30,7 @@ stages:
 - stage: Build
   jobs:
   - job: BuildInfrastructure
+    environmentName: 'myenv-vm.myVmLinux'
     steps:
     #--------------------------------------------#  
     # Use Terraform to create the Infrastructure      
