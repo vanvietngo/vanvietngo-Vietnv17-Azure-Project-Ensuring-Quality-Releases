@@ -26,6 +26,8 @@ stages:
 #--------------------------------------------#    
 - stage: Build
   jobs:
+      script: |
+        echo "Starting Selenium Tests"
 #     # Postman - Install Newman    
 #     # ToDo: Update the command and verify the working directory
 #     - task: CmdLine@2
