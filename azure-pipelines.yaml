@@ -8,7 +8,7 @@ trigger:
 
 # ToDo: Replace the agent pool name, if you are using Udacity Cloud lab. 
 # Otherwise, comment out the line below. 
-pool: Azure Pipelines
+pool: MyPool
 
 variables:
   python.version: '3.7.6'
@@ -17,7 +17,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'myenv-vm'
+  # environmentName: 'myenv-vm'
   
 
 stages:
