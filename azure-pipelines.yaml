@@ -17,7 +17,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'myenv-vm'
+  environmentName: 'myenv-vm.myVmLinux'
     # Web app name
   # webAppName: 'phunghttfinal3-appservice'
   # vmName: 'myVmLinux'
