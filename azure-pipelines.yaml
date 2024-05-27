@@ -45,7 +45,7 @@ stages:
             displayName: "Terrafom init"
             inputs:
               provider: "azurerm"
-              command: "init -reconfigure"
+              command: "init"
               workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
               backendServiceArm: "$(azureServiceConnectionId)"
               backendAzureRmResourceGroupName: "Azuredevops"
