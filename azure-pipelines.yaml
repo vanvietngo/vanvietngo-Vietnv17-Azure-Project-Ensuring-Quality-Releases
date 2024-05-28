@@ -3,7 +3,7 @@ name: Azure Pipeline
 trigger:
   - master
 
-pool: mypool
+pool: MyPool
 
 variables:
   System.Debug: true
@@ -11,7 +11,7 @@ variables:
   azureServiceConnectionId: "myServiceConnection"
   projectRoot: $(System.DefaultWorkingDirectory)
   environmentName: "test"
-  poolName: mypool
+  poolName: MyPool
   webAppName: myApplication-AppService
 
 stages:
