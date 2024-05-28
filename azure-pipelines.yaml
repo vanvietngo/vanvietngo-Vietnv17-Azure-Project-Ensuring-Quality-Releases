@@ -21,10 +21,10 @@ stages:
         pool:
           name: $(poolName)
         steps:
-          - task: TerraformInstaller@0
-            displayName: "Terrafom installation"
+          - task: terraformInstaller@0
             inputs:
-              terraformVersion: "1.7.4"
+              terraformVersion: '0.12.12'
+            displayName: Install Terraform
 
           - task: TerraformCLI@0
             displayName: "Terrafom init"
