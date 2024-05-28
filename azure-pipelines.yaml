@@ -183,7 +183,7 @@ stages:
   # Deploy FakeRestAPI Web App
   # ToDo: Provide <environment name> you created in your DevOps project
   - deployment: FakeRestAPI
-    pool: phungPool 
+    pool: MyPool 
     environment: '$(environmentName)'   # ToDo
     strategy:
       runOnce:
