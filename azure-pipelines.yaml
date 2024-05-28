@@ -20,8 +20,8 @@ variables:
   # environmentName:
   #   "myenv-vm"
     # Web app name
-  # webAppName: 'phunghttfinal3-appservice'
-  # vmName: 'myVmLinux'
+  webAppName: 'phunghttfinal3-appservice'
+  vmName: 'myVmLinux'
 
 stages:
   #--------------------------------------------#
