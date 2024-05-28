@@ -8,7 +8,7 @@ trigger:
 
 # ToDo: Replace the agent pool name, if you are using Udacity Cloud lab.
 # Otherwise, comment out the line below.
-pool: MyPool
+pool: { vmImage: ubuntu-latest } 
 
 variables:
   python.version: "3.7.6"
