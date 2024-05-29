@@ -1,0 +1,60 @@
+{
+  "info": {
+    "name": "Environment for Postman Validation Test Suite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get all employees",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful response\", function () {",
+              "    pm.response.to.have.status(200)",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}{{api_version}}{{employee_get_path}}{{id}}",
+          "host": ["{{url}}"],
+          "path": ["{{employee_get_path}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all employees",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful response\", function () {",
+              "    pm.response.to.have.status(200)",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}{{api_version}}{{employee_get_all_path}}",
+          "host": ["{{url}}"],
+          "path": ["{{employee_get_all_path}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

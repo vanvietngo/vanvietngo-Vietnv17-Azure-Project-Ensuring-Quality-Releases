@@ -1,0 +1,35 @@
+{
+  "name": "Environment for Postman Validation Test",
+  "values": [
+    {
+      "key": "id",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "url",
+      "value": "https://dummy.restapiexample.com",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "employee_get_path",
+      "value": "employee",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "employee_get_all_path",
+      "value": "employees",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "api_version",
+      "value": "api/v1",
+      "type": "default",
+      "enabled": true
+    }
+  ]
+}
