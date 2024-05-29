@@ -147,7 +147,7 @@ stages:
               testResultsFiles: "**/*report.xml"
               searchFolder: "$(System.DefaultWorkingDirectory)/automatedtesting/postman"
               mergeTestResults: true
-              testRunTitle: "Run Test Report"
+              testRunTitle: "Postman Test Result"
           #--------------------------------------------#
           # Selenium (UI) Test Suite - Archive the package
           # "ArchiveFiles@2" picks up the web package and archives it.
