@@ -96,16 +96,16 @@ stages:
           #--------------------------------------------#
           # Postman - Install Newman
           # ToDo: Update the command and verify the working directory
-          - task: NodeTool@0
-            displayName: Install NodeJS
-            inputs:
-              versionSource: 'spec'
-              versionSpec: '16.16.0'
-          - task: CmdLine@2
-            displayName: Install NPM
-            inputs:
-              script: "sudo apt install npm -y"
-              workingDirectory: "$(System.DefaultWorkingDirectory)"
+          # - task: NodeTool@0
+          #   displayName: Install NodeJS
+          #   inputs:
+          #     versionSource: 'spec'
+          #     versionSpec: '16.16.0'
+          # - task: CmdLine@2
+          #   displayName: Install NPM
+          #   inputs:
+          #     script: "sudo apt install npm -y"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)"
           - task: CmdLine@2
             displayName: Install Newman
             inputs:
