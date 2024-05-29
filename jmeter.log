@@ -1,0 +1,31 @@
+2024-05-29 18:07:33,291 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2024-05-29 18:07:33,349 INFO o.a.j.JMeter: Loading user properties from: /home/azureuser/myagent/_work/1/drop-perftests/apache-jmeter-5.6.2/bin/user.properties
+2024-05-29 18:07:33,350 INFO o.a.j.JMeter: Loading system properties from: /home/azureuser/myagent/_work/1/drop-perftests/apache-jmeter-5.6.2/bin/system.properties
+2024-05-29 18:07:33,368 INFO o.a.j.JMeter: Copyright (c) 1998-2023 The Apache Software Foundation
+2024-05-29 18:07:33,368 INFO o.a.j.JMeter: Version 5.6.2
+2024-05-29 18:07:33,368 INFO o.a.j.JMeter: java.version=11.0.22
+2024-05-29 18:07:33,368 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: os.name=Linux
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: os.arch=amd64
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: os.version=5.15.0-1064-azure
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: file.encoding=UTF-8
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: java.awt.headless=true
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: Max memory     =1073741824
+2024-05-29 18:07:33,369 INFO o.a.j.JMeter: Available Processors =1
+2024-05-29 18:07:33,388 INFO o.a.j.JMeter: Default Locale=English (EN)
+2024-05-29 18:07:33,389 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2024-05-29 18:07:33,389 INFO o.a.j.JMeter: JMeterHome=/home/azureuser/myagent/_work/1/drop-perftests/apache-jmeter-5.6.2
+2024-05-29 18:07:33,389 INFO o.a.j.JMeter: user.dir  =/home/azureuser/myagent/_work/1/drop-perftests
+2024-05-29 18:07:33,389 INFO o.a.j.JMeter: PWD       =/home/azureuser/myagent/_work/1/drop-perftests
+2024-05-29 18:07:33,393 INFO o.a.j.JMeter: IP: 10.0.0.5 Name: myVmLinux FullName: myvmlinux.internal.cloudapp.net
+2024-05-29 18:07:33,426 INFO o.a.j.JMeter: Setting property 'jmeter.reportgenerator.outputdir' to:'/home/azureuser/myagent/_work/1/drop-perftests/log/jmeter/endurance-test/html'
+2024-05-29 18:07:33,427 ERROR o.a.j.JMeter: An error occurred: 
+org.apache.jmeter.report.config.ConfigurationException: The file /home/azureuser/myagent/_work/1/drop-perftests/endurance-test.jmx doesn't exist or can't be opened
+	at org.apache.jmeter.JMeter.runNonGui(JMeter.java:950) ~[ApacheJMeter_core.jar:5.6.2]
+	at org.apache.jmeter.JMeter.startNonGui(JMeter.java:940) ~[ApacheJMeter_core.jar:5.6.2]
+	at org.apache.jmeter.JMeter.start(JMeter.java:508) [ApacheJMeter_core.jar:5.6.2]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.apache.jmeter.NewDriver.main(NewDriver.java:259) [ApacheJMeter.jar:5.6.2]
