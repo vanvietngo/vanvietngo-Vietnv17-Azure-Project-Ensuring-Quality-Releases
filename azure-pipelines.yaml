@@ -253,59 +253,101 @@ stages:
       # ToDo:
       # Selenium | Functional UI Tests
       # ToDo:
+      # - deployment: VMDeploy
+      #   displayName: Selenium Tests
+      #   environment:
+      #     name: "$(environmentName)"
+      #     resourceType: VirtualMachine
+      #   strategy:
+      #     runOnce:
+      #       deploy:
+      #         steps:
+      #           - download: current
+      #             artifact: drop-uitests # ToDo: Change/provide a name
+      #             name: "download_tests"
+
+      #           # - task: Bash@3
+      #           #   inputs:
+      #           #     targetType: 'inline'
+      #           #     script: |
+      #           #       #! /bin/bash
+      #           #       sudo apt-get update -y
+      #           #       sudo apt-get upgrade -y
+      #           #       sudo apt-get install python3-pip -y
+      #           #       sudo apt-get install unzip -y
+      #           #       sudo apt-get install -y chromium-browser
+      #           #       sudo apt-get install -y chromium-chromedriver
+      #           #       pip3 install selenium
+      #           #       cd ~/
+      #           #       DIR=/home/azuredevops/app
+      #           #       if [ ! -d "$DIR" ]; then
+      #           #           mkdir app
+      #           #       fi
+      #           #       mv $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip app
+      #           #       cd app
+      #           #       unzip -o $(Build.BuildId)-uitests.zip
+      #           #       FILE=/home/azuredevops/app/chromedriver_linux64.zip
+      #           #       if [ ! -f "$FILE" ]; then
+      #           #           LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+      #           #           wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
+      #           #           unzip -o chromedriver_linux64.zip
+      #           #           sudo mv chromedriver /usr/bin/chromedriver
+      #           #           sudo chown root:root /usr/bin/chromedriver
+      #           #           sudo chmod +x /usr/bin/chromedriverq
+      #           #       fi
+      #           #       export PATH=$PATH:/usr/bin/chromedriver
+
+      #           #       echo "Starting Selenium Tests"
+      #           #       mkdir -p $(Pipeline.Workspace)/drop-uitests/log/selenium
+      #           #       python3 login.py > $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
+      #           #       ls $(Pipeline.Workspace)/drop-uitests/log/selenium
+      #           #       echo "Completed Selenium Tests. Check selenium.log for results."
+      #           #       sudo cat $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
+      #           #       sudo mkdir -p /var/log
+      #           #       sudo cp $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log /var/log/selenium.log
+
+      #           - task: Bash@3
+      #             displayName: Install required packages for Selenium running
+      #             inputs:
+      #               targetType: "inline"
+      #               script: |
+      #                 #! /bin/bash
+      #                 sudo apt-get update -y
+      #                 sudo apt-get install python3-pip -y
+      #                 sudo apt-get install unzip -y
+      #                 pip3 install webdriver_manager
+      #           - bash: |
+      #               unzip -o $(Build.BuildId)-uitests.zip
+      #               pip3 install -r requirements.txt
+      #               google-chrome --version
+      #               chromedriver --version
+      #               sudo mv chromedriver /usr/bin/chromedriver
+      #               sudo chown root:root /usr/bin/chromedriver
+      #               sudo chmod +x /usr/bin/chromedriver
+      #               python3 login.py | tee -a selenium.log
+      #             workingDirectory: $(Pipeline.Workspace)/drop-uitests
+
+      #           - task: PublishPipelineArtifact@1
+      #             displayName: Publish Selenium Log
+      #             inputs:
+      #               targetPath: "$(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log"
+      #               artifactName: "drop-selenium-logs"
+
       - deployment: VMDeploy
         displayName: Selenium Tests
         environment:
-          name: "$(environmentName)"
+          name: $(environmentName)
           resourceType: VirtualMachine
         strategy:
           runOnce:
             deploy:
               steps:
                 - download: current
-                  artifact: drop-uitests # ToDo: Change/provide a name
-                  name: "download_tests"
-
-                # - task: Bash@3
-                #   inputs:
-                #     targetType: 'inline'
-                #     script: |
-                #       #! /bin/bash
-                #       sudo apt-get update -y
-                #       sudo apt-get upgrade -y
-                #       sudo apt-get install python3-pip -y
-                #       sudo apt-get install unzip -y
-                #       sudo apt-get install -y chromium-browser
-                #       sudo apt-get install -y chromium-chromedriver
-                #       pip3 install selenium
-                #       cd ~/
-                #       DIR=/home/azuredevops/app
-                #       if [ ! -d "$DIR" ]; then
-                #           mkdir app
-                #       fi
-                #       mv $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip app
-                #       cd app
-                #       unzip -o $(Build.BuildId)-uitests.zip
-                #       FILE=/home/azuredevops/app/chromedriver_linux64.zip
-                #       if [ ! -f "$FILE" ]; then
-                #           LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-                #           wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-                #           unzip -o chromedriver_linux64.zip
-                #           sudo mv chromedriver /usr/bin/chromedriver
-                #           sudo chown root:root /usr/bin/chromedriver
-                #           sudo chmod +x /usr/bin/chromedriverq
-                #       fi
-                #       export PATH=$PATH:/usr/bin/chromedriver
-
-                #       echo "Starting Selenium Tests"
-                #       mkdir -p $(Pipeline.Workspace)/drop-uitests/log/selenium
-                #       python3 login.py > $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
-                #       ls $(Pipeline.Workspace)/drop-uitests/log/selenium
-                #       echo "Completed Selenium Tests. Check selenium.log for results."
-                #       sudo cat $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
-                #       sudo mkdir -p /var/log
-                #       sudo cp $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log /var/log/selenium.log
-
+                  artifact: drop-uitests
+                - task: NodeTool@0
+                  displayName: Install NodeJS 16
+                  inputs:
+                    versionSpec: "16.x"
                 - task: Bash@3
                   displayName: Install required packages for Selenium running
                   inputs:
@@ -325,10 +367,5 @@ stages:
                     sudo chown root:root /usr/bin/chromedriver
                     sudo chmod +x /usr/bin/chromedriver
                     python3 login.py | tee -a selenium.log
+                  displayName: "Run Selenium Tests"
                   workingDirectory: $(Pipeline.Workspace)/drop-uitests
-
-                - task: PublishPipelineArtifact@1
-                  displayName: Publish Selenium Log
-                  inputs:
-                    targetPath: "$(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log"
-                    artifactName: "drop-selenium-logs"
