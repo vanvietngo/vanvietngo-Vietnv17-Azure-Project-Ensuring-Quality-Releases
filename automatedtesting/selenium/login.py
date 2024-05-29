@@ -1,85 +1,78 @@
 # #!/usr/bin/env python
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as ChromeOptions
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromeService 
 from selenium.webdriver.common.by import By
-import datetime
+import logging
 
-# Start the browser and perform the test
-def start ():
-    print (timestamp() + 'Open chrome')
-    # --uncomment when running in Azure DevOps.
-    options = ChromeOptions()
-    
-    options.add_argument("--headless")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--remote-debugging-port=9222")
+logging.basicConfig(
+    format='%(asctime)s %(message)s',
+    level=logging.INFO,
+    datefmt='%b %d %H:%M:%S')
 
-    driver = webdriver.Chrome(options=options)
-    # driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.headless = True
 
-    # Login
-    login(driver, 'standard_user', 'secret_sauce')
+def login(user, password):
+  driver.get('https://www.saucedemo.com/')
+  driver.find_element(By.CSS_SELECTOR, "input[id='user-name']").send_keys(user)
+  driver.find_element(By.CSS_SELECTOR, "input[id='password']").send_keys(password)
+  driver.find_element(By.CSS_SELECTOR, "input[id='login-button']").click()
+  if driver.current_url == 'https://www.saucedemo.com/inventory.html':
+    logging.info ('Successfully logged in with user: ' + user)
+    logo = driver.find_element(By.CSS_SELECTOR, ".header_label>.app_logo").text
+    return "${logo}" == "Swag Labs"
+  else:
+    logging.info  ('Failed to logged in')
+    return False
 
-    # Add cart
-    add_cart(driver)
+def add_item ():
+  driver.get("https://www.saucedemo.com/inventory.html")
+  driver.find_element(By.ID,'add-to-cart-sauce-labs-backpack').click()
+  no_of_items = driver.find_element(By.CSS_SELECTOR, "span.shopping_cart_badge").text
+  return no_of_items == '1'
+  logging.info  ('Add single item completed!')
 
-    # Remove cart
-    remove_cart(driver)
+def remove_item ():
+  driver.get("https://www.saucedemo.com/inventory.html")
+  driver.find_element(By.ID,'remove-sauce-labs-backpack').click()
+  items = driver.find_elements(By.CLASS_NAME, "cart_item")
+  return len(items) == 0
+  logging.info  ('Remove single item completed!')
 
-# Login method
-def login (driver, user, password):
-    print (timestamp() + 'Browser started successfully. Navigating to the demo page to login.')
-    driver.get('https://www.saucedemo.com/')
+def add_all_items():
+  driver.get("https://www.saucedemo.com/inventory.html")
+  items = driver.find_elements(By.CLASS_NAME, 'inventory_item')
+  for item in items:
+    item.find_element(By.CSS_SELECTOR, "button.btn_inventory").click()
+  no_of_items = driver.find_element(By.CSS_SELECTOR, "span.shopping_cart_badge").text
+  assert no_of_items == '6'
+  logging.info  ('Add all items completed!')
 
-    print (timestamp() + 'Enter username standard_user')
-    driver.find_element(By.CSS_SELECTOR, "input[id = 'user-name']").send_keys(user)
+def remove_all_items():
+  driver.get("https://www.saucedemo.com/cart.html")
+  items = driver.find_elements(By.CLASS_NAME, "cart_item")
+  for item in items:
+    item.find_element(By.CLASS_NAME, "cart_button").click()
+  items = driver.find_elements(By.CLASS_NAME, "cart_item")
+  return len(items) == 0
+  logging.info  ('Remove all items completed!')
 
-    print (timestamp() + 'Enter password secret_sauce')
-    driver.find_element(By.CSS_SELECTOR, "input[id = 'password']").send_keys(password)
+logging.info ('Starting the browser...')
+# Chrome version and chromedriver must be same
+# https://stackoverflow.com/questions/60296873/sessionnotcreatedexception-message-session-not-created-this-version-of-chrome
+# https://sites.google.com/chromium.org/driver/downloads/version-selection
+# driver = webdriver.Chrome(executable_path='./chromedriver.exe', options=options)
+driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=options)
+logging.info ('Browser started successfully. Navigating to the demo page to login.')
+try:
+    login('standard_user', 'secret_sauce')
 
-    print (timestamp() + 'Click login button')
-    driver.find_element(By.CSS_SELECTOR, "input[id = 'login-button']").click()
-
-    logoElements = driver.find_elements(By.CSS_SELECTOR, ".app_logo")
-    assert len(logoElements) > 0, "Element not found"
-
-    print (timestamp() + 'Login success')
-
-# Add cart
-def add_cart(driver):
-    print (timestamp() + 'Add 6 product')
-    productElements = driver.find_elements(By.CSS_SELECTOR, ".inventory_item")
-
-    for product in productElements:
-        productButton = product.find_element(By.CSS_SELECTOR, ".btn_inventory")
-        productName = product.find_element(By.CSS_SELECTOR, ".inventory_item_name")
-
-        print(timestamp() + f"Product {productName.text} was added to cart")
-        productButton.click()
-
-    cartCount = int(driver.find_element(By.CSS_SELECTOR, ".shopping_cart_badge").text)
-    assert cartCount == len(productElements), 'The cart count does not correct'
-
-    print(timestamp() + 'Cart count = ' + str(cartCount))
-
-# Remove all product
-def remove_cart(driver):
-    print (timestamp() + 'Cart page')
-    driver.find_element(By.CSS_SELECTOR, ".shopping_cart_link").click()
-
-    print (timestamp() + 'Remove all product')
-    removeButtons = driver.find_elements(By.CSS_SELECTOR, ".cart_button")
-    for remove in removeButtons:
-        remove.click()
-
-    cartCountElement = driver.find_elements(By.CSS_SELECTOR, ".shopping_cart_badge")
-    assert len(cartCountElement) == 0, "Remove failed"
-
-    print(timestamp() + 'Remove success or not')
-
-def timestamp():
-    ts = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-    return (ts + ' ')
-
-start()
+    add_item()
+    remove_item()
+    add_all_items()
+    remove_all_items()
+    logging.info ('Completed all test case')
+except:
+    # Close the driver
+    driver.close()
