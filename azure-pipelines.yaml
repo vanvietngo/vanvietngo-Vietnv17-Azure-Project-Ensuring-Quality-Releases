@@ -387,3 +387,42 @@ stages:
                     python3 uitests.py > ui-logs.log
                     cat ui-logs.log
                     sudo mv ui-logs.log /var/logs
+
+
+
+      # - deployment: VMDeploy
+      #   displayName: Selenium Tests
+      #   environment:
+      #     name: $(environmentName)
+      #     resourceType: VirtualMachine
+      #   strategy:
+      #     runOnce:
+      #       deploy:
+      #         steps:
+      #           - download: current
+      #             artifact: drop-uitests
+      #           - task: NodeTool@0
+      #             displayName: Install NodeJS 16
+      #             inputs:
+      #               versionSpec: "16.x"
+      #           - task: Bash@3
+      #             displayName: Install required packages for Selenium running
+      #             inputs:
+      #               targetType: "inline"
+      #               script: |
+      #                 #! /bin/bash
+      #                 sudo apt-get update -y
+      #                 sudo apt-get install python3-pip -y
+      #                 sudo apt-get install unzip -y
+      #                 pip3 install webdriver_manager
+      #           - bash: |
+      #               unzip -o $(Build.BuildId)-uitests.zip
+      #               pip3 install -r requirements.txt
+      #               google-chrome --version
+      #               chromedriver --version
+      #               sudo mv chromedriver /usr/bin/chromedriver
+      #               sudo chown root:root /usr/bin/chromedriver
+      #               sudo chmod +x /usr/bin/chromedriver
+      #               python3 uitests.py | tee -a selenium.log
+      #             displayName: "Run Selenium Tests"
+      #             workingDirectory: $(Pipeline.Workspace)/drop-uitests
