@@ -1,4 +1,4 @@
-name: AZURE PIPELIMES => VIETNV17 RUN $(Date:yyyyMMdd)$(Rev:.r)
+name: AZURE PIPELIMES  VIETNV17 RUN $(Date:yyyyMMdd)$(Rev:.r)
 
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
@@ -349,7 +349,7 @@ stages:
                 inputs:
                   targetType: 'inline'
                   script: |
-                    unzip -o $(Pipeline.Workspace)/selenium/selenium-tests.zip -d .
+                    # unzip -o $(Pipeline.Workspace)/selenium/selenium-tests.zip -d .
                     rm -rf /var/logs || true
                     sudo mkdir /var/logs
                     python3 --version
