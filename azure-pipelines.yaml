@@ -1,4 +1,4 @@
-name: AZURE PIPELIMES  VIETNV17 RUN $(Date:yyyyMMdd)$(Rev:.r)
+name: AZURE PIPELINES  VIETNV17 RUN $(Date:yyyyMMdd)$(Rev:.r)
 
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
@@ -306,32 +306,32 @@ stages:
       #           #       sudo mkdir -p /var/log
       #           #       sudo cp $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log /var/log/selenium.log
 
-      #           - task: Bash@3
-      #             displayName: Install required packages for Selenium running
-      #             inputs:
-      #               targetType: "inline"
-      #               script: |
-      #                 #! /bin/bash
-      #                 sudo apt-get update -y
-      #                 sudo apt-get install python3-pip -y
-      #                 sudo apt-get install unzip -y
-      #                 pip3 install webdriver_manager
-      #           - bash: |
-      #               unzip -o $(Build.BuildId)-uitests.zip
-      #               pip3 install -r requirements.txt
-      #               google-chrome --version
-      #               chromedriver --version
-      #               sudo mv chromedriver /usr/bin/chromedriver
-      #               sudo chown root:root /usr/bin/chromedriver
-      #               sudo chmod +x /usr/bin/chromedriver
-      #               python3 login.py | tee -a selenium.log
-      #             workingDirectory: $(Pipeline.Workspace)/drop-uitests
+                # - task: Bash@3
+                #   displayName: Install required packages for Selenium running
+                #   inputs:
+                #     targetType: "inline"
+                #     script: |
+                #       #! /bin/bash
+                #       sudo apt-get update -y
+                #       sudo apt-get install python3-pip -y
+                #       sudo apt-get install unzip -y
+                #       pip3 install webdriver_manager
+                # - bash: |
+                #     unzip -o $(Build.BuildId)-uitests.zip
+                #     pip3 install -r requirements.txt
+                #     google-chrome --version
+                #     chromedriver --version
+                #     sudo mv chromedriver /usr/bin/chromedriver
+                #     sudo chown root:root /usr/bin/chromedriver
+                #     sudo chmod +x /usr/bin/chromedriver
+                #     python3 login.py | tee -a selenium.log
+                #   workingDirectory: $(Pipeline.Workspace)/drop-uitests
 
-      #           - task: PublishPipelineArtifact@1
-      #             displayName: Publish Selenium Log
-      #             inputs:
-      #               targetPath: "$(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log"
-      #               artifactName: "drop-selenium-logs"
+                # - task: PublishPipelineArtifact@1
+                #   displayName: Publish Selenium Log
+                #   inputs:
+                #     targetPath: "$(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log"
+                #     artifactName: "drop-selenium-logs"
 
       - deployment: VMRunUITests
         displayName: Run UI Tests
@@ -349,7 +349,7 @@ stages:
                 inputs:
                   targetType: 'inline'
                   script: |
-                    # unzip -o $(Pipeline.Workspace)/selenium/selenium-tests.zip -d .
+                    # unzip -o $(Build.BuildId)-uitests.zip -d .
                     rm -rf /var/logs || true
                     sudo mkdir /var/logs
                     python3 --version
