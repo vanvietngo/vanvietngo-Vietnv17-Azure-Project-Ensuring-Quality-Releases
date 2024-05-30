@@ -364,7 +364,7 @@ stages:
       - deployment: VMRunUITests
         displayName: Run UI Tests
         environment:
-          name:  'VM-TEST'
+          name:  'test'
         strategy:
           runOnce:
             deploy:
