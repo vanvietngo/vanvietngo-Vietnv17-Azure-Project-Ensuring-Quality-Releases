@@ -40,25 +40,25 @@ stages:
 
           # Run Terraform Init on the pipeline agent
           # ToDo: Replace the resource group name, storage account name, and container name below
-          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-            displayName: "Terrafom init"
-            inputs:
-              provider: "azurerm"
-              command: "init"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
-              backendServiceArm: "$(azureServiceConnectionId)"
-              backendAzureRmResourceGroupName: "Azuredevops"
-              backendAzureRmStorageAccountName: "tfstate1053129871"
-              backendAzureRmContainerName: "tfstate"
-              backendAzureRmKey: "test.terraform.tfstate"
+          # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+          #   displayName: "Terrafom init"
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "init"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
+          #     backendServiceArm: "$(azureServiceConnectionId)"
+          #     backendAzureRmResourceGroupName: "Azuredevops"
+          #     backendAzureRmStorageAccountName: "tfstate1053129871"
+          #     backendAzureRmContainerName: "tfstate"
+          #     backendAzureRmKey: "test.terraform.tfstate"
 
-          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-            displayName: Terraform validate
-            inputs:
-              provider: "azurerm"
-              command: "validate"
-              environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
+          # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+          #   displayName: Terraform validate
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "validate"
+          #     environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
 
           # OPTIONAL - This step is needed only if your Terraform VM uses an SSH key pair for login and you want your pipeline agent to connect to it.
           # Generate an SSH key pair in your local/AZ Cloud shell. Use the public key in the Terraform VM module.
@@ -77,13 +77,13 @@ stages:
           #   secureFile:
 
           # Run Terraform Apply
-          - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
-            displayName: Terraform apply
-            inputs:
-              provider: "azurerm"
-              command: "apply"
-              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
-              environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
+          # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+          #   displayName: Terraform apply
+          #   inputs:
+          #     provider: "azurerm"
+          #     command: "apply"
+          #     workingDirectory: "$(System.DefaultWorkingDirectory)/terraform/environments/test"
+          #     environmentServiceNameAzureRM: "$(azureServiceConnectionId)"
 
           # ToDo: Change the workingDirectory path, as applicable to you
           # Destroy the resources in Azure by running a separate pipeline.
@@ -253,58 +253,73 @@ stages:
       # ToDo:
       # Selenium | Functional UI Tests
       # ToDo:
-      # - deployment: VMDeploy
-      #   displayName: Selenium Tests
-      #   environment:
-      #     name: "$(environmentName)"
-      #     resourceType: VirtualMachine
-      #   strategy:
-      #     runOnce:
-      #       deploy:
-      #         steps:
-      #           - download: current
-      #             artifact: drop-uitests # ToDo: Change/provide a name
-      #             name: "download_tests"
+      - deployment: VMDeploy
+        displayName: Selenium Tests
+        environment:
+          name: "$(environmentName)"
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: drop-uitests # ToDo: Change/provide a name
+                  name: "download_tests"
 
-      #           # - task: Bash@3
-      #           #   inputs:
-      #           #     targetType: 'inline'
-      #           #     script: |
-      #           #       #! /bin/bash
-      #           #       sudo apt-get update -y
-      #           #       sudo apt-get upgrade -y
-      #           #       sudo apt-get install python3-pip -y
-      #           #       sudo apt-get install unzip -y
-      #           #       sudo apt-get install -y chromium-browser
-      #           #       sudo apt-get install -y chromium-chromedriver
-      #           #       pip3 install selenium
-      #           #       cd ~/
-      #           #       DIR=/home/azuredevops/app
-      #           #       if [ ! -d "$DIR" ]; then
-      #           #           mkdir app
-      #           #       fi
-      #           #       mv $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip app
-      #           #       cd app
-      #           #       unzip -o $(Build.BuildId)-uitests.zip
-      #           #       FILE=/home/azuredevops/app/chromedriver_linux64.zip
-      #           #       if [ ! -f "$FILE" ]; then
-      #           #           LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-      #           #           wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-      #           #           unzip -o chromedriver_linux64.zip
-      #           #           sudo mv chromedriver /usr/bin/chromedriver
-      #           #           sudo chown root:root /usr/bin/chromedriver
-      #           #           sudo chmod +x /usr/bin/chromedriverq
-      #           #       fi
-      #           #       export PATH=$PATH:/usr/bin/chromedriver
+                - task: Bash@3
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      #! /bin/bash
+                      sudo apt-get update -y
+                      sudo apt-get upgrade -y
+                      sudo apt-get install python3-pip -y
+                      sudo apt-get install unzip -y
+                      sudo apt-get install -y chromium-browser
+                      sudo apt-get install -y chromium-chromedriver
+                      pip3 install selenium
+                      cd ~/
+                      DIR=/home/azuredevops/app
+                      if [ ! -d "$DIR" ]; then
+                          mkdir app
+                      fi
+                      mv $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip app
+                      cd app
+                      unzip -o $(Build.BuildId)-uitests.zip
+                      FILE=/home/azuredevops/app/chromedriver_linux64.zip
+                      if [ ! -f "$FILE" ]; then
+                          LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+                          wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
+                          unzip -o chromedriver_linux64.zip
+                          sudo mv chromedriver /usr/bin/chromedriver
+                          sudo chown root:root /usr/bin/chromedriver
+                          sudo chmod +x /usr/bin/chromedriverq
+                      fi
+                      export PATH=$PATH:/usr/bin/chromedriver
 
-      #           #       echo "Starting Selenium Tests"
-      #           #       mkdir -p $(Pipeline.Workspace)/drop-uitests/log/selenium
-      #           #       python3 login.py > $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
-      #           #       ls $(Pipeline.Workspace)/drop-uitests/log/selenium
-      #           #       echo "Completed Selenium Tests. Check selenium.log for results."
-      #           #       sudo cat $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
-      #           #       sudo mkdir -p /var/log
-      #           #       sudo cp $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log /var/log/selenium.log
+                      echo "Starting Selenium Tests"
+                      mkdir -p $(Pipeline.Workspace)/drop-uitests/log/selenium
+                      python3 login.py > $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
+                      ls $(Pipeline.Workspace)/drop-uitests/log/selenium
+                      echo "Completed Selenium Tests. Check selenium.log for results."
+                      sudo cat $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log
+                      sudo mkdir -p /var/log
+                      sudo cp $(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log /var/log/selenium.log
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 # - task: Bash@3
                 #   displayName: Install required packages for Selenium running
@@ -333,29 +348,42 @@ stages:
                 #     targetPath: "$(Pipeline.Workspace)/drop-uitests/log/selenium/selenium.log"
                 #     artifactName: "drop-selenium-logs"
 
-      - deployment: VMRunUITests
-        displayName: Run UI Tests
-        environment:
-          name:  'VM-TEST'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-              - download: current
-                displayName: 'Download Selenium'
-                artifact: drop-uitests
-              - task: Bash@3
-                displayName: UI Tests
-                inputs:
-                  targetType: 'inline'
-                  script: |
-                    unzip -o $(Build.BuildId)-uitests.zip -d .
-                    sudo rm -rf /var/logs || true
-                    sudo mkdir /var/logs
-                    python3 --version
-                    pip install selenium
-                    # pip3 uninstall selenium -y || true
-                    # pip3 install -r requirements.txt
-                    python3 uitest.py > ui-logs.log
-                    cat ui-logs.log
-                    sudo mv ui-logs.log /var/logs
+
+
+
+
+
+
+
+
+
+
+
+
+
+      # - deployment: VMRunUITests
+      #   displayName: Run UI Tests
+      #   environment:
+      #     name:  'VM-TEST'
+      #   strategy:
+      #     runOnce:
+      #       deploy:
+      #         steps:
+      #         - download: current
+      #           displayName: 'Download Selenium'
+      #           artifact: drop-uitests
+      #         - task: Bash@3
+      #           displayName: UI Tests
+      #           inputs:
+      #             targetType: 'inline'
+      #             script: |
+      #               unzip -o $(Build.BuildId)-uitests.zip -d .
+      #               sudo rm -rf /var/logs || true
+      #               sudo mkdir /var/logs
+      #               python3 --version
+      #               pip install selenium
+      #               # pip3 uninstall selenium -y || true
+      #               # pip3 install -r requirements.txt
+      #               python3 uitest.py > ui-logs.log
+      #               cat ui-logs.log
+      #               sudo mv ui-logs.log /var/logs
