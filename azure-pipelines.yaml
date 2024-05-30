@@ -386,7 +386,7 @@ stages:
                     # pip3 install -r requirements.txt
                     python3 uitests.py > ui-logs.log
                     cat ui-logs.log
-                    sudo mv ui-logs.log /var/logs
+                    sudo cp ui-logs.log /var/logs
 
 
 
