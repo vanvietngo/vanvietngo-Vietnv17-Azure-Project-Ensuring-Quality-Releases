@@ -349,8 +349,8 @@ stages:
                 inputs:
                   targetType: 'inline'
                   script: |
-                    # unzip -o $(Build.BuildId)-uitests.zip -d .
-                    rm -rf /var/logs || true
+                    unzip -o $(Build.BuildId)-uitests.zip -d .
+                    sudo rm -rf /var/logs || true
                     sudo mkdir /var/logs
                     python3 --version
                     pip install selenium
