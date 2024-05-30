@@ -343,7 +343,7 @@ stages:
               steps:
               - download: current
                 displayName: 'Download Selenium'
-                artifact: selenium
+                artifact: drop-uitests
               - task: Bash@3
                 displayName: UI Tests
                 inputs:
