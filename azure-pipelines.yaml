@@ -377,8 +377,8 @@ stages:
                   targetType: 'inline'
                   script: |
                     unzip -o $(Pipeline.Workspace)/drop-uitests/$(Build.BuildId)-uitests.zip -d .
-                    sudo rm -rf /var/logs || true
-                    sudo mkdir /var/logs
+                    # sudo rm -rf /var/logs || true
+                    # sudo mkdir /var/logs
                     python3 --version
                     pip install selenium
                     # pip3 uninstall selenium -y || true
