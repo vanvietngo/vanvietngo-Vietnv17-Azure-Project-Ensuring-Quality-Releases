@@ -100,7 +100,7 @@ stages:
   - deployment: FakeRestAPI
     pool:
       name: MyPool
-    environment: 'WAP-TEST'
+    environment: 'test'
     strategy:
       runOnce:
         deploy:
@@ -120,7 +120,7 @@ stages:
   - deployment: VMRunUITests
     displayName: Run UI Tests
     environment:
-      name:  'VM-TEST'
+      name:  'test'
     strategy:
       runOnce:
         deploy:
