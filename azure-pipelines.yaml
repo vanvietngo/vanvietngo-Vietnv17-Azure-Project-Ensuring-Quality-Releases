@@ -363,8 +363,7 @@ stages:
 
       - deployment: VMRunUITests
         displayName: Run UI Tests
-        environment:
-          name:  'test'
+        environment: "$(environmentName)"
         strategy:
           runOnce:
             deploy:
