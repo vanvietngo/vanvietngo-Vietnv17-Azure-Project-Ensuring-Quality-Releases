@@ -39,7 +39,7 @@ stages:
     #   inputs:
     #     provider: 'azurerm'
     #     command: 'init'
-    #     backendServiceArm: 'nghiaConnection'
+    #     backendServiceArm: 'myServiceConnection'
     #     backendAzureRmResourceGroupName: 'Azuredevops'
     #     backendAzureRmStorageAccountName: 'nghiaaccount'
     #     backendAzureRmContainerName: 'terraform-state'
@@ -51,14 +51,14 @@ stages:
     #     provider: 'azurerm'
     #     command: 'plan'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-    #     environmentServiceNameAzureRM: 'nghiaConnection'
+    #     environmentServiceNameAzureRM: 'myServiceConnection'
     # - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
     #   displayName: Terraform Validate and Apply  
     #   inputs:
     #     provider: 'azurerm'
     #     command: 'apply'
     #     workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
-    #     environmentServiceNameAzureRM: 'nghiaConnection'
+    #     environmentServiceNameAzureRM: 'myServiceConnection'
 
 - stage: Build
   displayName: Build
@@ -108,7 +108,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App'
             inputs:
-              azureSubscription: 'nghiaConnection'
+              azureSubscription: 'myServiceConnection'
               appType: 'webApp'
               appName: 'WAS-EQR'
               package: '$(Pipeline.Workspace)/drop-fakerestapi/$(Build.BuildId)-fakerestapi.zip'
