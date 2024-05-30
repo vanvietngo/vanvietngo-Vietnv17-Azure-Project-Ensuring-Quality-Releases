@@ -356,6 +356,6 @@ stages:
                     pip install selenium
                     # pip3 uninstall selenium -y || true
                     # pip3 install -r requirements.txt
-                    python3 uitests.py > ui-logs.log
+                    python3 uitest.py > ui-logs.log
                     cat ui-logs.log
                     sudo mv ui-logs.log /var/logs
